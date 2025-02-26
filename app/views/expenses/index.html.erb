@@ -1,0 +1,60 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark"><i class="fas fa-wallet"></i> Manage Expensessss</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header bg-primary">
+        <h3 class="card-title text-white"><i class="fas fa-list"></i> Expense List</h3>
+        <div class="card-tools">
+          <%= link_to "Add Expense", new_admin_expense_path, class: "btn btn-light btn-sm" %>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead class="bg-dark text-white">
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @expenses.each_with_index do |expense, index| %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= expense.name %></td>
+                  <td><span class="badge badge-success">$<%= expense.amount %></span></td>
+                  <td><%= expense.category %></td>
+                  <td><%= expense.date.strftime("%B %d, %Y") %></td>
+                  <td>
+                    <%= link_to admin_expense_path(expense), method: :delete, class: "btn btn-danger btn-sm", data: { confirm: "Are you sure?" } do %>
+                      <i class="fas fa-trash"></i> Delete
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <%= link_to "Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
+</section>
+
