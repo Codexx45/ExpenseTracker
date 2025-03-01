@@ -10,10 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[8.0].define(version: 2025_02_21_082241) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+=======
+ActiveRecord::Schema[8.0].define(version: 2025_03_01_124645) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
+  create_table "bank_accounts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name"
+    t.string "account_number"
+    t.string "bank_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_bank_accounts_on_user_id"
+  end
+
+  create_table "budgets", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "category"
+    t.decimal "limit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_budgets_on_user_id"
+  end
+
+>>>>>>> 7916aad (Added login and sign up page)
   create_table "expenses", force: :cascade do |t|
     t.string "name"
     t.decimal "amount"
@@ -21,5 +47,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_21_082241) do
     t.date "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+<<<<<<< HEAD
   end
+=======
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_expenses_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email"
+    t.string "name"
+    t.string "password_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  add_foreign_key "bank_accounts", "users"
+  add_foreign_key "budgets", "users"
+  add_foreign_key "expenses", "users"
+>>>>>>> 7916aad (Added login and sign up page)
 end

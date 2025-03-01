@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+<<<<<<< HEAD
+=======
+  devise_for :users
+>>>>>>> 7916aad (Added login and sign up page)
   namespace :admin do
     get "dashboard/index"
   end

@@ -64,3 +64,10 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+<<<<<<< HEAD
+=======
+
+gem "devise", "~> 4.9"
+
+gem "cssbundling-rails", "~> 1.4"
+>>>>>>> 7916aad (Added login and sign up page)
