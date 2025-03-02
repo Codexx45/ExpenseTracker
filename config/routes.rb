@@ -1,35 +1,19 @@
 Rails.application.routes.draw do
-<<<<<<< HEAD
-=======
-  devise_for :users
->>>>>>> 7916aad (Added login and sign up page)
-  namespace :admin do
-    get "dashboard/index"
-  end
-  get "expenses/index"
-  get "expenses/new"
-  get "expenses/create"
-  get "expenses/edit"
-  get "expenses/update"
-  get "expenses/destroy"
-
-  root "expenses#index"
-  namespace :admin do
+  namespace :admin do  # Fix: Add colon `:admin`
     get 'dashboard', to: "dashboard#index"
     resources :expenses
     resources :users
+    resources :dashboard, only: [:index]
   end
-  resources :expenses
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  resources :expenses, except: [:show]
+
+  root "expenses#index"
+
+  # Health check route
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
+  # PWA routes (commented out)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

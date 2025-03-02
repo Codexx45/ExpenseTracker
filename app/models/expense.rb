@@ -1,6 +1,7 @@
 class Expense < ApplicationRecord
-<<<<<<< HEAD
-=======
+  # Ensure this line is present
   belongs_to :user
->>>>>>> 7916aad (Added login and sign up page)
+
+  # Add validations if needed
+  validates :amount, :category, :date, presence: true
 end

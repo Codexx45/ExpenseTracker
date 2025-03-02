@@ -10,13 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[8.0].define(version: 2025_02_21_082241) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_catalog.plpgsql"
-
-=======
-ActiveRecord::Schema[8.0].define(version: 2025_03_01_124645) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_02_044037) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -39,7 +33,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_01_124645) do
     t.index ["user_id"], name: "index_budgets_on_user_id"
   end
 
->>>>>>> 7916aad (Added login and sign up page)
   create_table "expenses", force: :cascade do |t|
     t.string "name"
     t.decimal "amount"
@@ -47,10 +40,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_01_124645) do
     t.date "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-<<<<<<< HEAD
-  end
-=======
     t.bigint "user_id", null: false
+    t.string "description"
     t.index ["user_id"], name: "index_expenses_on_user_id"
   end
 
@@ -71,5 +62,4 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_01_124645) do
   add_foreign_key "bank_accounts", "users"
   add_foreign_key "budgets", "users"
   add_foreign_key "expenses", "users"
->>>>>>> 7916aad (Added login and sign up page)
 end

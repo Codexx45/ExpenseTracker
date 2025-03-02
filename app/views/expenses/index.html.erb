@@ -1,60 +1,196 @@
-<div class="content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-dark"><i class="fas fa-wallet"></i> Manage Expensessss</h1>
+<% @page_title = "All Expenses" %>
+<div class="content-wrapper">
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row my-3">
+        <div class="col-sm-12 d-flex justify-content-end">
+          <!-- Button to trigger the modal -->
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+            Add New Expense
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Filters</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <%= form_with url: expenses_path, method: :get, local: true do |form| %>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <%= form.label :start_date, "Start Date" %>
+                      <%= form.date_field :start_date, class: "form-control", value: params[:start_date] %>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <%= form.label :end_date, "End Date" %>
+                      <%= form.date_field :end_date, class: "form-control", value: params[:end_date] %>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <%= form.label :category, "Category" %>
+                      <%= form.select :category, options_for_select(["All Categories", "Food", "Transport", "Bills", "Entertainment", "Other"], params[:category]), {}, class: "form-control" %>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <%= form.label :amount, "Amount" %>
+                      <%= form.number_field :amount, class: "form-control", placeholder: "Enter amount", value: params[:amount] %>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-md-12 d-flex justify-content-end">
+                    <%= form.submit "Apply Filters", class: "btn btn-primary mr-2" %>
+                    <%= link_to "Reset", expenses_path, class: "btn btn-default" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row my-2">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <!-- app/views/expenses/index.html.erb -->
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @expenses.each do |expense| %>
+                    <tr>
+                      <td><%= number_to_currency(expense.amount) %></td>
+                      <td><%= expense.category %></td>
+                      <td><%= expense.date.strftime("%Y-%m-%d") %></td>
+                      <td><%= expense.description || "No description" %></td>
+                      <td>
+                        <!-- Edit Button with Modal Trigger -->
+                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editExpenseModal<%= expense.id %>"> Edit</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteExpenseModal<%= expense.id %>">Delete</button>
+                      </td>
+                    </tr>
+
+                    <!-- Modal for Editing Expense -->
+                    <div class="modal fade" id="editExpenseModal<%= expense.id %>" tabindex="-1" aria-labelledby="editExpenseModalLabel<%= expense.id %>" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="editExpenseModalLabel<%= expense.id %>">Edit Expense</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <%= form_with model: expense, local: true, data: { turbo: false } do |form| %>
+                              <div class="form-group">
+                                <%= form.label :amount %>
+                                <%= form.number_field :amount, class: "form-control", step: "0.01", required: true %>
+                              </div>
+                              <div class="form-group">
+                                <%= form.label :category %>
+                                <%= form.select :category, options_for_select(["Food", "Transport", "Bills", "Entertainment", "Other"], expense.category), { prompt: "Select category" }, class: "form-control", required: true %>
+                              </div>
+                              <div class="form-group">
+                                <%= form.label :date %>
+                                <%= form.date_field :date, class: "form-control", required: true %>
+                              </div>
+                              <div class="form-group">
+                                <%= form.label :description %>
+                                <%= form.text_area :description, class: "form-control", rows: 3 %>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <%= form.submit "Update Expense", class: "btn btn-primary" %>
+                              </div>
+                            <% end %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Modal for Deleting Expense -->
+                      <div class="modal fade" id="deleteExpenseModal<%= expense.id %>" tabindex="-1" aria-labelledby="deleteExpenseModalLabel<%= expense.id %>" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="deleteExpenseModalLabel<%= expense.id %>">Delete Expense</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              Are you sure you want to delete this expense?
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                              <%= link_to "Delete", expense_path(expense), method: :delete, class: "btn btn-danger delete-button", data: { bs_dismiss: "modal", remote: true } %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Modal for Adding New Expense -->
+<div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addExpenseModalLabel">Add New Expense</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Modal Form for Adding New Expense -->
+        <%= form_with model: Expense.new, local: true, data: { turbo: false } do |form| %>
+          <div class="form-group">
+            <%= form.label :amount %>
+            <%= form.number_field :amount, class: "form-control", placeholder: "Enter amount", step: "0.01", required: true %>
+          </div>
+          <div class="form-group">
+            <%= form.label :category %>
+            <%= form.select :category, options_for_select(["Food", "Transport", "Bills", "Entertainment", "Other"]), { prompt: "Select category" }, class: "form-control", required: true %>
+          </div>
+          <div class="form-group">
+            <%= form.label :date %>
+            <%= form.date_field :date, class: "form-control", required: true %>
+          </div>
+          <div class="form-group">
+            <%= form.label :description %>
+            <%= form.text_area :description, class: "form-control", placeholder: "Enter description", rows: 3 %>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <%= form.submit "Save Expense", class: "btn btn-primary" %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
 </div>
-
-<section class="content">
-  <div class="container-fluid">
-    <div class="card">
-      <div class="card-header bg-primary">
-        <h3 class="card-title text-white"><i class="fas fa-list"></i> Expense List</h3>
-        <div class="card-tools">
-          <%= link_to "Add Expense", new_admin_expense_path, class: "btn btn-light btn-sm" %>
-        </div>
-      </div>
-
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-bordered table-striped">
-            <thead class="bg-dark text-white">
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Category</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @expenses.each_with_index do |expense, index| %>
-                <tr>
-                  <td><%= index + 1 %></td>
-                  <td><%= expense.name %></td>
-                  <td><span class="badge badge-success">$<%= expense.amount %></span></td>
-                  <td><%= expense.category %></td>
-                  <td><%= expense.date.strftime("%B %d, %Y") %></td>
-                  <td>
-                    <%= link_to admin_expense_path(expense), method: :delete, class: "btn btn-danger btn-sm", data: { confirm: "Are you sure?" } do %>
-                      <i class="fas fa-trash"></i> Delete
-                    <% end %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="card-footer">
-        <%= link_to "Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary" %>
-      </div>
-    </div>
-  </div>
-</section>
-
