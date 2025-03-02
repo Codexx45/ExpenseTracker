@@ -3,3 +3,4 @@
 //= link_directory ../stylesheets .css
 //= link application.js
 //= link controllers/application.js
+//= require rails-ujs

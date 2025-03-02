@@ -90,7 +90,7 @@
                       <td>
                         <!-- Edit Button with Modal Trigger -->
                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editExpenseModal<%= expense.id %>"> Edit</button>
-                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteExpenseModal<%= expense.id %>">Delete</button>
+                        <%= link_to "Delete", expense_path(expense), method: :delete, class: "btn btn-danger delete-button", data: { confirm: "Are you sure?", remote: true } %>
                       </td>
                     </tr>
 
@@ -130,7 +130,7 @@
                       </div>
                     </div>
                     <!-- Modal for Deleting Expense -->
-                      <div class="modal fade" id="deleteExpenseModal<%= expense.id %>" tabindex="-1" aria-labelledby="deleteExpenseModalLabel<%= expense.id %>" aria-hidden="true">
+                      <div class="modal fade" id="deleteExpenseModal<%= expense.id %>" tabindex="-1" aria-labelledby="deleteExpenseModalLabel<%= expense.id %>">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">

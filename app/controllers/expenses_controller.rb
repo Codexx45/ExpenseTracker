@@ -7,10 +7,10 @@ class ExpensesController < ApplicationController
     @expenses = current_user.expenses.order(date: :desc) # Corrected line
     @recent_expenses = current_user.expenses.order(date: :desc).limit(10) # Corrected line
     @page_title = "All Expenses" # Set the page title
-  
+
     # Apply filters if parameters are present
     apply_filters
-  
+
     # Debugging: Print the expenses and recent expenses
     puts "Expenses: #{@expenses.inspect}"
     puts "Recent Expenses: #{@recent_expenses.inspect}"
@@ -44,10 +44,17 @@ class ExpensesController < ApplicationController
   end
 
   def destroy
-    @expense.destroy
-    respond_to do |format|  # Fix: Use `do |format|` instead of `do [format]`
-      format.html { redirect_to expenses_path, notice: 'Expense was successfully deleted.' }
-      format.js   # Correct: This looks for `destroy.js.erb`, not `.json`
+    @expense = Expense.find(params[:id])
+    if @expense.destroy
+      respond_to do |format|
+        format.html { redirect_to expenses_path, notice: "Expense was successfully deleted." }
+        format.js   # This will look for a destroy.js.erb file
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to expenses_path, alert: "Failed to delete expense." }
+        format.js   # Handle AJAX response for failure
+      end
     end
   end
 

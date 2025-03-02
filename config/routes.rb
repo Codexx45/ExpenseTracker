@@ -1,13 +1,19 @@
 Rails.application.routes.draw do
-  namespace :admin do  # Fix: Add colon `:admin`
-    get 'dashboard', to: "dashboard#index"
+  # Devise routes for user authentication
+  devise_for :users  # Ensure this line is present
+
+  # Other routes
+  namespace :admin do
+    get "dashboard", to: "dashboard#index"
     resources :expenses
     resources :users
-    resources :dashboard, only: [:index]
+    resources :dashboard, only: [ :index ]
   end
 
-  resources :expenses, except: [:show]
+  # Regular resources
+  resources :expenses, except: [ :show ]
 
+  # Root route
   root "expenses#index"
 
   # Health check route
